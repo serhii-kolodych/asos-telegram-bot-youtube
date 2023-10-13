@@ -1,0 +1,41 @@
+📺 watch Python Tutorial for this code on YouTube: 
+https://www.youtube.com/@serhiikolodych
+
+✅ 1. Access your server by typing in console:
+
+ssh root@<--your-ip-address-->>
+Write your password to access your server.
+
+✅ 2. Depending on your server's operating system - install Python.
+
+✅ 3. Create folder "asos-youtube" and upload there your *.py files.
+
+✅ 4. Create venv and install libraries: 
+	4.1. Create Virtual Environment 
+python3 -m venv /root/asos-youtube/venv/
+	4.2. Activate:
+source /root/asos-youtube/venv/bin/activate
+	4.3. Install libraries:
+pip install datetime==4.3.1 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.9 asyncio==3.4.4
+	4.4. Check and Deactivate:
+pip list
+deactivate
+
+✅ 5. Create service file inside folder:
+/etc/systemd/system
+	5.1. Create file:
+Asos-youtube.service
+	5.2. Inside file write:
+[Unit]
+Description=Asos-youtube
+
+[Service]
+ExecStart=/root/asos-youtube/venv/bin/python3 /root/asos-youtube/asos-youtube.py
+
+[Install]
+WantedBy=multi-user.target
+
+✅ 5. Start (Restart) your *.service:
+sudo systemctl restart asos-youtube
+ 
+
