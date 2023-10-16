@@ -3,7 +3,7 @@
 # ✅ 1. Insert your TOKENs in config.py file
 
 # ✅ 2. Don't forget to install libraries, by typing in your terminal:
-# pip install datetime==4.4 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.9 asyncio==3.4.3
+# pip install datetime==4.4 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.9 asyncio==3.4.3 PyMySQL==1.1.0
 
 # ✅ 3. You can run the script now! 🚀
 
