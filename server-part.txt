@@ -16,7 +16,7 @@ python3 -m venv /root/asos-youtube/venv/
 	4.2. Activate:
 source /root/asos-youtube/venv/bin/activate
 	4.3. Install libraries:
-pip install datetime==4.3.1 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.9 asyncio==3.4.4
+pip install datetime==4.4 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.9 asyncio==3.4.3 PyMySQL==1.1.0
 	4.4. Check and Deactivate:
 pip list
 deactivate
