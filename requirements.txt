@@ -1,0 +1,6 @@
+aiogram
+asyncio
+requests
+sqlalchemy
+psycopg2-binary
+aiohttp 
