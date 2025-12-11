@@ -80,36 +80,38 @@ async def handle_start(message: types.Message):
     Creates a new task for sending updates if one doesn't exist.
     """
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ Start command initiated ⬇️ ⬇️ ⬇️")
-    print(f"[{get_formatted_time()}] Starting bot initialization for user {message.from_user.id}")
-    
-    try:
-        # Notify admin about new user
-        try:
-            await bot.send_message(266585723, f"new-user: {message.from_user.full_name}\nID: {message.from_user.id}\n@{message.from_user.username}")
-            print(f"[{get_formatted_time()}] Admin notification sent successfully")
-        except Exception as e:
-            print(f"[{get_formatted_time()}] Error sending admin notification: {str(e)}")
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
 
-        # Check if user already has a running task
-        if message.from_user.id not in user_tasks or not user_tasks[message.from_user.id]:
-            print(f"[{get_formatted_time()}] Creating new update task for user {message.from_user.id}")
-            await message.answer("Bot started! You will from NOW receive Updates with discounts.")
-            await message.answer("I will send you discounts ASAP! Check your /products")
+    # print(f"[{get_formatted_time()}] Starting bot initialization for user {message.from_user.id}")
+    
+    # try:
+    #     # Notify admin about new user
+    #     try:
+    #         await bot.send_message(266585723, f"new-user: {message.from_user.full_name}\nID: {message.from_user.id}\n@{message.from_user.username}")
+    #         print(f"[{get_formatted_time()}] Admin notification sent successfully")
+    #     except Exception as e:
+    #         print(f"[{get_formatted_time()}] Error sending admin notification: {str(e)}")
+
+    #     # Check if user already has a running task
+    #     if message.from_user.id not in user_tasks or not user_tasks[message.from_user.id]:
+    #         print(f"[{get_formatted_time()}] Creating new update task for user {message.from_user.id}")
+    #         await message.answer("Bot started! You will from NOW receive Updates with discounts.")
+    #         await message.answer("I will send you discounts ASAP! Check your /products")
             
-            try:
-                user_tasks[message.from_user.id] = asyncio.create_task(start_sending_updates(message.from_user.id))
-                print(f"[{get_formatted_time()}] Update task created successfully")
-            except Exception as e:
-                print(f"[{get_formatted_time()}] Error creating update task: {str(e)}")
-                await message.answer("Error starting updates. Please try /stop and then /start again.")
-        else:
-            print(f"[{get_formatted_time()}] User {message.from_user.id} already has a running task")
-            await message.answer("Bot is already running. If you want to stop, use /stop")
+    #         try:
+    #             user_tasks[message.from_user.id] = asyncio.create_task(start_sending_updates(message.from_user.id))
+    #             print(f"[{get_formatted_time()}] Update task created successfully")
+    #         except Exception as e:
+    #             print(f"[{get_formatted_time()}] Error creating update task: {str(e)}")
+    #             await message.answer("Error starting updates. Please try /stop and then /start again.")
+    #     else:
+    #         print(f"[{get_formatted_time()}] User {message.from_user.id} already has a running task")
+    #         await message.answer("Bot is already running. If you want to stop, use /stop")
         
-        print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Start command completed successfully ⬆️ ⬆️ ⬆️")
-    except Exception as e:
-        print(f"[{get_formatted_time()}] Unexpected error in start command: {str(e)}")
-        await message.answer("An unexpected error occurred. Please try again.")
+    #     print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Start command completed successfully ⬆️ ⬆️ ⬆️")
+    # except Exception as e:
+    #     print(f"[{get_formatted_time()}] Unexpected error in start command: {str(e)}")
+    #     await message.answer("An unexpected error occurred. Please try again.")
 
 
 @dp.message(Command("stop"))
@@ -119,31 +121,33 @@ async def stop_command(message: types.Message):
     Cancels the user's update task and removes it from the tasks dictionary.
     """
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ Stop command initiated ⬇️ ⬇️ ⬇️")
-    print(f"[{get_formatted_time()}] Attempting to stop updates for user {message.from_user.id}")
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
+
+    # print(f"[{get_formatted_time()}] Attempting to stop updates for user {message.from_user.id}")
     
-    try:
-        if message.from_user.id in user_tasks and user_tasks[message.from_user.id]:
-            print(f"[{get_formatted_time()}] Found running task for user {message.from_user.id}")
-            try:
-                user_tasks[message.from_user.id].cancel()
-                try:
-                    await user_tasks[message.from_user.id]
-                except asyncio.CancelledError:
-                    pass
-                user_tasks.pop(message.from_user.id)
-                print(f"[{get_formatted_time()}] Task cancelled and removed successfully")
-                await message.answer("Bot stopped. You will no longer receive updates. Press /start")
-            except Exception as e:
-                print(f"[{get_formatted_time()}] Error cancelling task: {str(e)}")
-                await message.answer("Error stopping updates. Please try again.")
-        else:
-            print(f"[{get_formatted_time()}] No running task found for user {message.from_user.id}")
-            await message.answer("Bot is not running. Use /start to start it.")
+    # try:
+    #     if message.from_user.id in user_tasks and user_tasks[message.from_user.id]:
+    #         print(f"[{get_formatted_time()}] Found running task for user {message.from_user.id}")
+    #         try:
+    #             user_tasks[message.from_user.id].cancel()
+    #             try:
+    #                 await user_tasks[message.from_user.id]
+    #             except asyncio.CancelledError:
+    #                 pass
+    #             user_tasks.pop(message.from_user.id)
+    #             print(f"[{get_formatted_time()}] Task cancelled and removed successfully")
+    #             await message.answer("Bot stopped. You will no longer receive updates. Press /start")
+    #         except Exception as e:
+    #             print(f"[{get_formatted_time()}] Error cancelling task: {str(e)}")
+    #             await message.answer("Error stopping updates. Please try again.")
+    #     else:
+    #         print(f"[{get_formatted_time()}] No running task found for user {message.from_user.id}")
+    #         await message.answer("Bot is not running. Use /start to start it.")
         
-        print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Stop command completed successfully ⬆️ ⬆️ ⬆️")
-    except Exception as e:
-        print(f"[{get_formatted_time()}] Unexpected error in stop command: {str(e)}")
-        await message.answer("An unexpected error occurred. Please try again.")
+    #     print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Stop command completed successfully ⬆️ ⬆️ ⬆️")
+    # except Exception as e:
+    #     print(f"[{get_formatted_time()}] Unexpected error in stop command: {str(e)}")
+    #     await message.answer("An unexpected error occurred. Please try again.")
 
 
 @dp.message(Command("help"))
@@ -329,7 +333,8 @@ async def more(message: Message):
 
         # Construct and make ASOS API request
         try:
-            query = text(f"https://www.asos.com/api/product/search/v2/?offset=0&q={query_asos}&store=ROE&lang=en-GB&currency=EUR&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7&size_eu={size_id}")
+            query = text(f"https://www.asos.com/api/product/search/v2/?offset=0&includeNonPurchasableTypes=restocking&q={query_asos}&store=COM&lang=en-GB&currency=GBP&rowlength=4&channel=desktop-web&country=GB&customerLoyaltyTier=null&keyStoreDataversion=qx71qrg-45&advertisementsPartnerId=100712&advertisementsVisitorId=5ccee116-9a0f-454c-ac68-ab4ce91150f4&advertisementsOptInConsent=true&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6&size_eu={size_id}")
+            # query = text(f"https://www.asos.com/api/product/search/v2/?offset=0&q={query_asos}&store=ROE&lang=en-GB&currency=EUR&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7&size_eu={size_id}")
             s = requests.Session()
             response = s.get(url=query, headers=headers)
             response.raise_for_status()  # Raise exception for bad status codes
@@ -448,17 +453,19 @@ async def refresh(message: Message):
     Handle the /refresh command to manually trigger an update check for all products.
     """
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ refresh pressed ⬇️ ⬇️ ⬇️")
-    print(f"[{get_formatted_time()}] Starting manual refresh for user {message.from_user.id}")
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
+
+    # print(f"[{get_formatted_time()}] Starting manual refresh for user {message.from_user.id}")
     
-    try:
-        print(f"[{get_formatted_time()}] Checking for updates...")
-        await send_updates(message.from_user.id, "yes")
-        print(f"[{get_formatted_time()}] Updates check completed")
-        await message.answer("just refreshed")
-        print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Refresh command completed successfully ⬆️ ⬆️ ⬆️")
-    except Exception as e:
-        print(f"[{get_formatted_time()}] Error during refresh: {str(e)}")
-        await message.answer("Error during refresh. Please try again.")
+    # try:
+    #     print(f"[{get_formatted_time()}] Checking for updates...")
+    #     await send_updates(message.from_user.id, "yes")
+    #     print(f"[{get_formatted_time()}] Updates check completed")
+    #     await message.answer("just refreshed")
+    #     print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Refresh command completed successfully ⬆️ ⬆️ ⬆️")
+    # except Exception as e:
+    #     print(f"[{get_formatted_time()}] Error during refresh: {str(e)}")
+    #     await message.answer("Error during refresh. Please try again.")
 
 
 async def fetch_asos(url, headers):
@@ -518,8 +525,10 @@ async def send_updates(user_id, statistics):
         # Get user's saved products
         print(f"[{get_formatted_time()}] Fetching user's saved products from database...")
         with engine.connect() as conn:
-            query = text(f"SELECT DISTINCT user_input FROM asos WHERE telegram_id = '{user_id}'")
-            result = conn.execute(query)
+            # query = text(f"SELECT DISTINCT user_input FROM asos WHERE telegram_id = '{user_id}'")
+            # result = conn.execute(query)
+            query = text("SELECT DISTINCT user_input FROM asos WHERE telegram_id = :user_id")
+            result = conn.execute(query, {"user_id": str(user_id)})
             user_inputs = [row[0] for row in result]
             
         if not user_inputs:
@@ -547,7 +556,8 @@ async def send_updates(user_id, statistics):
                 
                 # Make ASOS API request with timeout and retries
                 print(f"[{get_formatted_time()}] Making ASOS API request for: {query_asos} + SIZE_ID: {size_id}")
-                query = text(f"https://www.asos.com/api/product/search/v2/?offset=0&q={query_asos}&store=ROE&lang=en-GB&currency=EUR&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7&size_eu={size_id}")
+                query = text(f"https://www.asos.com/api/product/search/v2/?offset=0&includeNonPurchasableTypes=restocking&q={query_asos}&store=COM&lang=en-GB&currency=GBP&rowlength=4&channel=desktop-web&country=GB&customerLoyaltyTier=null&keyStoreDataversion=qx71qrg-45&advertisementsPartnerId=100712&advertisementsVisitorId=5ccee116-9a0f-454c-ac68-ab4ce91150f4&advertisementsOptInConsent=true&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6&size_eu={size_id}")
+                # query = text(f"https://www.asos.com/api/product/search/v2/?offset=0&q={query_asos}&store=ROE&lang=en-GB&currency=EUR&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7&size_eu={size_id}")
                 print(query)
                 
                 try:
@@ -659,80 +669,82 @@ async def send_updates(user_id, statistics):
 @dp.message() # text message handler
 async def handle_text(message: types.Message):
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ Text message handler initiated ⬇️ ⬇️ ⬇️")
-    if message.text.lower().startswith("delete "):
-        try:
-            # Get the part after "delete "
-            delete_command = message.text[7:].strip()
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
+
+    # if message.text.lower().startswith("delete "):
+    #     try:
+    #         # Get the part after "delete "
+    #         delete_command = message.text[7:].strip()
             
-            # If it's just a number (e.g., "delete 4")
-            if delete_command.isdigit():
-                number = int(delete_command)
-                # Get the list of products
-                with engine.connect() as conn:
-                    query = text(
-                        """
-                        WITH latest_refresh AS (
-                            SELECT DISTINCT ON (user_input) user_input, refresh_date
-                            FROM asos 
-                            WHERE telegram_id = :telegram_id
-                            ORDER BY user_input, refresh_date DESC
-                        )
-                        SELECT user_input 
-                        FROM latest_refresh 
-                        ORDER BY refresh_date DESC
-                        """
-                    )
-                    result = conn.execute(query, {"telegram_id": message.from_user.id})
-                    products = [row[0] for row in result]
+    #         # If it's just a number (e.g., "delete 4")
+    #         if delete_command.isdigit():
+    #             number = int(delete_command)
+    #             # Get the list of products
+    #             with engine.connect() as conn:
+    #                 query = text(
+    #                     """
+    #                     WITH latest_refresh AS (
+    #                         SELECT DISTINCT ON (user_input) user_input, refresh_date
+    #                         FROM asos 
+    #                         WHERE telegram_id = :telegram_id
+    #                         ORDER BY user_input, refresh_date DESC
+    #                     )
+    #                     SELECT user_input 
+    #                     FROM latest_refresh 
+    #                     ORDER BY refresh_date DESC
+    #                     """
+    #                 )
+    #                 result = conn.execute(query, {"telegram_id": message.from_user.id})
+    #                 products = [row[0] for row in result]
                     
-                    if 1 <= number <= len(products):
-                        user_product = products[number - 1]
-                    else:
-                        await message.answer(f"❌ Invalid product number. Please use a number between 1 and {len(products)}")
-                        return
-            else:
-                # Handle the format "delete X: product_name"
-                parts = delete_command.split(":", 1)
-                if len(parts) != 2:
-                    await message.answer("Invalid delete format. Please use either:\n- delete 4\n- delete 4: product_name")
-                    return
+    #                 if 1 <= number <= len(products):
+    #                     user_product = products[number - 1]
+    #                 else:
+    #                     await message.answer(f"❌ Invalid product number. Please use a number between 1 and {len(products)}")
+    #                     return
+    #         else:
+    #             # Handle the format "delete X: product_name"
+    #             parts = delete_command.split(":", 1)
+    #             if len(parts) != 2:
+    #                 await message.answer("Invalid delete format. Please use either:\n- delete 4\n- delete 4: product_name")
+    #                 return
                     
-                user_product = parts[1].strip()
-                if "last discount was" in user_product:
-                    user_product = user_product.split(", last discount was")[0].strip()
+    #             user_product = parts[1].strip()
+    #             if "last discount was" in user_product:
+    #                 user_product = user_product.split(", last discount was")[0].strip()
             
-            print(f"[{get_formatted_time()}] Attempting to delete product: {user_product}")
+    #         print(f"[{get_formatted_time()}] Attempting to delete product: {user_product}")
             
-            # Delete the product
-            with engine.connect() as conn:
-                query = text(
-                    "DELETE FROM asos WHERE telegram_id = :telegram_id AND user_input = :user_input"
-                )
-                result = conn.execute(
-                    query,
-                    {"telegram_id": message.from_user.id, "user_input": user_product}
-                )
-                conn.commit()
+    #         # Delete the product
+    #         with engine.connect() as conn:
+    #             query = text(
+    #                 "DELETE FROM asos WHERE telegram_id = :telegram_id AND user_input = :user_input"
+    #             )
+    #             result = conn.execute(
+    #                 query,
+    #                 {"telegram_id": message.from_user.id, "user_input": user_product}
+    #             )
+    #             conn.commit()
                 
-                if result.rowcount > 0:
-                    await message.answer(f"✅ Successfully deleted: {user_product}")
-                else:
-                    await message.answer(f"❌ Could not find product to delete: {user_product}")
+    #             if result.rowcount > 0:
+    #                 await message.answer(f"✅ Successfully deleted: {user_product}")
+    #             else:
+    #                 await message.answer(f"❌ Could not find product to delete: {user_product}")
                 
-            await message.answer("Check your updated /products list 📦")
-            print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Delete operation completed successfully ⬆️ ⬆️ ⬆️")
+    #         await message.answer("Check your updated /products list 📦")
+    #         print(f"[{get_formatted_time()}] ⬆️ ⬆️ ⬆️ Delete operation completed successfully ⬆️ ⬆️ ⬆️")
             
-        except Exception as e:
-            print(f"[{get_formatted_time()}] Error during delete operation: {str(e)}")
-            await message.answer(f"❌ Error occurred while deleting: {str(e)}")
-    else:
-        global more_what
-        global offset
-        global order_number
-        more_what = message.text
-        offset = 0
-        order_number = 0
-        await more(message)
+    #     except Exception as e:
+    #         print(f"[{get_formatted_time()}] Error during delete operation: {str(e)}")
+    #         await message.answer(f"❌ Error occurred while deleting: {str(e)}")
+    # else:
+    #     global more_what
+    #     global offset
+    #     global order_number
+    #     more_what = message.text
+    #     offset = 0
+    #     order_number = 0
+    #     await more(message)
 
 
 

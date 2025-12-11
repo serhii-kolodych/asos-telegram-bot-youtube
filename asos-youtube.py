@@ -3,11 +3,13 @@
 # ✅ 1. Insert your TOKENs in config.py file
 
 # ✅ 2. Don't forget to install libraries, by typing in your terminal:
-# pip install datetime==4.4 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.9 asyncio==3.4.3 PyMySQL==1.1.0
+# pip install datetime==4.4 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.9 asyncio==3.4.3 PyMySQL==1.1.0 psycopg2
+
+# pip install datetime==4.4 requests==2.26.0 SQLAlchemy==1.4.23 aiogram==2.25.1 asyncio==3.4.3 PyMySQL==1.1.0 psycopg2
 
 # ✅ 3. You can run the script now! 🚀
 
-import config # our config.py file with TOKENs for our bot and database
+import config_a # our config.py file with TOKENs for our bot and database
 import datetime # so we can write time and date of when we inserted product in database
 import requests # to receive json from website
 from sqlalchemy import create_engine, text # engine to work with database
@@ -16,8 +18,8 @@ from aiogram.types import Message # to read and write messages in telegram bot
 import asyncio # to send updates every ? seconds
 
 # Import your bot's TOKEN and engine_token from a configuration file (config.py)
-TOKEN = config.TOKEN
-engine_token = config.engine_token
+TOKEN = config_a.TOKEN
+engine_token = config_a.engine_token
 
 # Initialize the Telegram bot using the provided TOKEN
 bot = Bot(token=TOKEN)
@@ -32,7 +34,9 @@ user_tasks = {}
 headers = {"accept": "*/*", "user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 OPR/102.0.0.0"}
 
 # Create a database engine using SQLAlchemy, with SSL settings
-engine = create_engine(engine_token, connect_args={"ssl": {"ca": "/etc/ssl/cert.pem"}})
+# engine = create_engine(engine_token, connect_args={"ssl": {"ca": "/etc/ssl/cert.pem"}})
+engine = create_engine(engine_token)
+
 
 # Define global variables more_what, offset, and order_number (for /more function)
 global more_what
@@ -86,23 +90,28 @@ async def send_updates(user_id):
     # Connect to the database using the engine
     with engine.connect() as conn:
         # Query to retrieve distinct (unique) user inputs for the given user
-        query = text(f"SELECT DISTINCT user_input FROM `asos-youtube` WHERE telegram_id = '{user_id}' ")
-        result = conn.execute(query)
+        query = text('SELECT DISTINCT user_input FROM "asos" WHERE telegram_id = :user_id')
+        result = conn.execute(query, {"user_id": str(user_id)})
         user_inputs = [row[0] for row in result] # storing all unique user_input in user_inputs list
         if user_inputs: # Check if user_inputs list exists (there are user inputs):
             for user_input in user_inputs: # for every unique user_input we connect to database and select size_id, so later we could find discounts for this user_input on asos site
                 order_number = 0
                 with engine.connect() as conn:
-                    query = text(f"SELECT size_id FROM `asos-youtube` WHERE telegram_id = '{user_id}' AND user_input = '{user_input}'")
-                    size_id = conn.execute(query).fetchone()[0]
+                    query = text('SELECT size_id FROM "asos" WHERE telegram_id = :user_id AND user_input = :user_input')
+                    size_id = conn.execute(query, {"user_id": str(user_id), "user_input": user_input}).fetchone()[0]
                     query_search = user_input.split(', ', 1)[-1]
                     query_asos = query_search.replace(" ", "+")
                     # Construct the query URL to fetch product data from ASOS
-                    query = text(f"https://www.asos.com/api/product/search/v2/?offset=0&q={query_asos}"
-                        f"&store=ROE&lang=en-GB&currency=EUR&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7"
-                        f"&size_eu={size_id}")
+
+
+                    query_url = text(f"https://www.asos.com/api/product/search/v2/?offset=0&includeNonPurchasableTypes=restocking&q={query_asos}&store=COM&lang=en-GB&currency=GBP&rowlength=4&channel=desktop-web&country=GB&customerLoyaltyTier=null&keyStoreDataversion=qx71qrg-45&advertisementsPartnerId=100712&advertisementsVisitorId=5ccee116-9a0f-454c-ac68-ab4ce91150f4&advertisementsOptInConsent=true&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6&size_eu={size_id}")
+
+
+                    # query_url = (f"https://www.asos.com/api/product/search/v2/?offset=0&q={query_asos}"
+                    #     f"&store=ROE&lang=en-GB&currency=EUR&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7"
+                    #     f"&size_eu={size_id}")
                     s = requests.Session()
-                    response = s.get(url=query, headers=headers)
+                    response = s.get(url=query_url, headers=headers)
                     # results = all products from asos site for search query
                     results = response.json()
                     item_count = results.get("itemCount")
@@ -117,8 +126,8 @@ async def send_updates(user_id):
                             # connecting to database to check if we already have this product_id
                             with engine.connect() as conn:
                                 product_id = product.get('id')
-                                query_db = text(f"SELECT 1 FROM `asos-youtube` WHERE telegram_id = '{user_id}' AND product_id = '{product_id}'")
-                                existing_product = conn.execute(query_db).fetchone()
+                                query_db = text('SELECT 1 FROM "asos" WHERE telegram_id = :user_id AND product_id = :product_id')
+                                existing_product = conn.execute(query_db, {"user_id": str(user_id), "product_id": str(product_id)}).fetchone()
                                 if not existing_product: # If product doesn't exist, insert it into the database
                                     order_number += 1
                                     previous_price = product.get('price').get('previous').get('text')
@@ -131,12 +140,22 @@ async def send_updates(user_id):
                                     with engine.connect() as conn:
                                         current_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                                         query_db = text(
-                                            f"INSERT INTO `asos-youtube` (telegram_id, user_input, product_id, size_id, "
-                                            f"refresh_date, previous_price, current_price, link)"
-                                            f"VALUES ('{user_id}', '{user_input}', '{product_id}', '{size_id}',"
-                                            f"'{current_date}', '{previous_price}', '{current_price}', '{link}')"
-                                            f"ON DUPLICATE KEY UPDATE refresh_date = '{current_date}'")
-                                        conn.execute(query_db)
+                                            'INSERT INTO "asos" (telegram_id, user_input, product_id, size_id, '
+                                            'refresh_date, previous_price, current_price, link) '
+                                            'VALUES (:telegram_id, :user_input, :product_id, :size_id, '
+                                            ':refresh_date, :previous_price, :current_price, :link) '
+                                            'ON CONFLICT (telegram_id, product_id) DO UPDATE SET refresh_date = :refresh_date')
+                                        conn.execute(query_db, {
+                                            "telegram_id": str(user_id),
+                                            "user_input": user_input,
+                                            "product_id": str(product_id),
+                                            "size_id": str(size_id),
+                                            "refresh_date": current_date,
+                                            "previous_price": previous_price,
+                                            "current_price": current_price,
+                                            "link": link
+                                        })
+                                        conn.commit()
                                     if order_number > 3:
                                         await bot.send_message(user_id, "show /more?")
                                         offset = 4
@@ -153,8 +172,8 @@ async def send_updates(user_id):
 async def products(message: Message):
     # Connect to the database and fetch unique user inputs
     with engine.connect() as conn:
-        query = text(f"SELECT DISTINCT user_input FROM `asos-youtube` WHERE telegram_id = '{message.from_user.id}' ")
-        result = conn.execute(query)
+        query = text('SELECT DISTINCT user_input FROM "asos" WHERE telegram_id = :telegram_id')
+        result = conn.execute(query, {"telegram_id": str(message.from_user.id)})
         user_inputs = [row[0] for row in result] # Extract user_input values into user_inputs list
         if user_inputs:
             # Send a message with length of list
@@ -162,8 +181,8 @@ async def products(message: Message):
             i = 0
             # in list user_inputs for every item: Send user_input and their last refresh date
             for user_input in user_inputs:
-                query = text(f"SELECT refresh_date FROM `asos-youtube` WHERE user_input = '{user_input}' ORDER BY refresh_date DESC")
-                last_date = conn.execute(query).fetchone()[0].strftime('%d.%m %H:%M')
+                query = text('SELECT refresh_date FROM "asos" WHERE user_input = :user_input ORDER BY refresh_date DESC')
+                last_date = conn.execute(query, {"user_input": user_input}).fetchone()[0].strftime('%d.%m %H:%M')
                 i += 1
                 await message.answer(f"{i}: {user_input}, last discount was on: {last_date}")
         else:
@@ -209,13 +228,18 @@ async def more(message: Message):
     # Replace spaces in 'query_search' with '+' OR '%20' for the query URL
     query_asos = query_search.replace(" ", "+")
     # Construct the query URL for fetching more results
-    query = text(f"https://www.asos.com/api/product/search/v2/?offset={offset}&q={query_asos}&store=ROE&lang=en-GB&currency=EUR"
-        f"&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7"
-        f"&size_eu={size_id}")
+    
+    query_url = text(f"https://www.asos.com/api/product/search/v2/?offset=0&includeNonPurchasableTypes=restocking&q={query_asos}&store=COM&lang=en-GB&currency=GBP&rowlength=4&channel=desktop-web&country=GB&customerLoyaltyTier=null&keyStoreDataversion=qx71qrg-45&advertisementsPartnerId=100712&advertisementsVisitorId=5ccee116-9a0f-454c-ac68-ab4ce91150f4&advertisementsOptInConsent=true&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6&size_eu={size_id}")
+
+
+    # query_url = (f"https://www.asos.com/api/product/search/v2/?offset={offset}&q={query_asos}&store=ROE&lang=en-GB&currency=EUR"
+    #     f"&rowlength=4&channel=desktop-web&country=LV&keyStoreDataversion=h7g0xmn-38&limit=200&discount_band=1%2C2%2C3%2C4%2C5%2C6%2C7"
+    #     f"&size_eu={size_id}")
+    
     # Create an HTTP session and send a GET request
     s = requests.Session()
     # Send a GET request to the 'query' URL with headers 'headers'
-    response = s.get(url=query, headers=headers)
+    response = s.get(url=query_url, headers=headers)
     results = response.json() # Python dictionary results = parsed JSON from response
     item_count = results.get("itemCount") # from results get 'itemCount', showing how many products with discounts exists on asos site
     if offset == 0:
@@ -236,12 +260,23 @@ async def more(message: Message):
         with engine.connect() as conn:
             current_date = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
             # insert product into the database (on duplicate) update date
-            query_db = text(f"INSERT INTO `asos-youtube` (telegram_id, user_input, product_id, size_id, "
-                f"refresh_date, previous_price, current_price, link)"
-                f"VALUES ('{message.from_user.id}', '{more_what}', '{product.get('id')}', '{size_id}',"
-                f"'{current_date}', '{previous_price}', '{current_price}', '{link}')"
-                f"ON DUPLICATE KEY UPDATE refresh_date = '{current_date}'")
-            conn.execute(query_db)
+            query_db = text(
+                'INSERT INTO "asos" (telegram_id, user_input, product_id, size_id, '
+                'refresh_date, previous_price, current_price, link) '
+                'VALUES (:telegram_id, :user_input, :product_id, :size_id, '
+                ':refresh_date, :previous_price, :current_price, :link) '
+                'ON CONFLICT (telegram_id, product_id) DO UPDATE SET refresh_date = :refresh_date')
+            conn.execute(query_db, {
+                "telegram_id": str(message.from_user.id),
+                "user_input": more_what,
+                "product_id": str(product.get('id')),
+                "size_id": str(size_id),
+                "refresh_date": current_date,
+                "previous_price": previous_price,
+                "current_price": current_price,
+                "link": link
+            })
+            conn.commit()
         # Checking if bot already sent > 3 messages:
         if order_number - offset > 3:
             await message.answer("show /more?")
@@ -265,8 +300,9 @@ async def handle_text(message: Message):
         await message.answer(f"{user_input}")
         # Connect to the database and delete all rows for this user_input for this user's ID
         with engine.connect() as conn:
-            query = text(f"DELETE FROM `asos-youtube` WHERE telegram_id = '{message.from_user.id}' AND user_input = '{user_input}'")
-            conn.execute(query)
+            query = text('DELETE FROM "asos" WHERE telegram_id = :telegram_id AND user_input = :user_input')
+            conn.execute(query, {"telegram_id": str(message.from_user.id), "user_input": user_input})
+            conn.commit()
         # Send a confirmation message
         await message.answer("Deleted Successfully. Check your /products")
     else:

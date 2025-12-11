@@ -2,6 +2,7 @@
 config_a.py 
 
 # Virtual environments
+venv310/
 venv/
 ENV/
 env/
