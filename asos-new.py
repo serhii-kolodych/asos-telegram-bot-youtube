@@ -160,6 +160,7 @@ async def help(message: types.Message):
     
     try:
         help_text = (
+            "👉 This bot was done by @kolodych, if you want to reactivate this bot or want similar - write me a DM.\n\n"
             "👉 <b>/start</b> - Subscribe for updates\n\n"
             "📦 <b>/products</b> - List of your items\n\n"
             "📏 <b>/sizes</b> - Available sizes\n\n"
