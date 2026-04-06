@@ -80,7 +80,7 @@ async def handle_start(message: types.Message):
     Creates a new task for sending updates if one doesn't exist.
     """
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ Start command initiated ⬇️ ⬇️ ⬇️")
-    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠 \nBut you can watch a YouTube video about it: \nhttps://www.youtube.com/watch?v=Dni-ZKLqA0U")
 
     # print(f"[{get_formatted_time()}] Starting bot initialization for user {message.from_user.id}")
     
@@ -160,7 +160,7 @@ async def help(message: types.Message):
     
     try:
         help_text = (
-            "👉 This bot was done by @kolodych, if you want to reactivate this bot or want similar - write me a DM.\n\n"
+            "👉 This bot was done by @kolodych, if you want to reactivate this bot or want similar - write me a DM.\n\n Or you can watch a YouTube tutorial, how I built it: \nhttps://www.youtube.com/watch?v=Dni-ZKLqA0U"
             "👉 <b>/start</b> - Subscribe for updates\n\n"
             "📦 <b>/products</b> - List of your items\n\n"
             "📏 <b>/sizes</b> - Available sizes\n\n"
