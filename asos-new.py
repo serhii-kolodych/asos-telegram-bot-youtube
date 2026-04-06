@@ -121,7 +121,7 @@ async def stop_command(message: types.Message):
     Cancels the user's update task and removes it from the tasks dictionary.
     """
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ Stop command initiated ⬇️ ⬇️ ⬇️")
-    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠 \nBut you can watch a YouTube video about it: \nhttps://www.youtube.com/watch?v=Dni-ZKLqA0U")
 
     # print(f"[{get_formatted_time()}] Attempting to stop updates for user {message.from_user.id}")
     
@@ -454,7 +454,7 @@ async def refresh(message: Message):
     Handle the /refresh command to manually trigger an update check for all products.
     """
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ refresh pressed ⬇️ ⬇️ ⬇️")
-    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠 \nBut you can watch a YouTube video about it: \nhttps://www.youtube.com/watch?v=Dni-ZKLqA0U")
 
     # print(f"[{get_formatted_time()}] Starting manual refresh for user {message.from_user.id}")
     
@@ -670,7 +670,7 @@ async def send_updates(user_id, statistics):
 @dp.message() # text message handler
 async def handle_text(message: types.Message):
     print(f"[{get_formatted_time()}] ⬇️ ⬇️ ⬇️ Text message handler initiated ⬇️ ⬇️ ⬇️")
-    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠")
+    await message.answer("I'm sorry, but nobody was using this bot, so I stopped updating it, but asos.com didn't stop updating its API / bot blocking scripts, so that's why it doesn't work anymore 🫠 \nBut you can watch a YouTube video about it: \nhttps://www.youtube.com/watch?v=Dni-ZKLqA0U")
 
     # if message.text.lower().startswith("delete "):
     #     try:
